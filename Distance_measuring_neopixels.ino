@@ -14,6 +14,7 @@ SR04 sr04 = SR04(ECHO_PIN,TRIG_PIN);
 CRGB leds[NUM_LEDS];
 
 long a;
+int b;
 
 void setup() {
    delay( 3000 ); // power-up safety delay
@@ -28,19 +29,34 @@ void setup() {
 
 void loop() {
    a=sr04.Distance();
-   Serial.print(a);
-   Serial.println("cm");
+   Serial.println(a);
+   //Serial.println("cm");
    a = int(a);
-   if ( a > NUM_LEDS) {
-      a = NUM_LEDS;
+
+   
+   if (a>NUM_LEDS) {
+       b = a - NUM_LEDS;
+       if (b>NUM_LEDS) {
+        b = NUM_LEDS;
+       }
+       for (int i = 0; i<b; i++) {
+        leds[i] = CRGB::Red;
+       }
+       if (b<NUM_LEDS) {
+           for (int i = b; i<NUM_LEDS; i++) {
+            leds[i] = CRGB::Blue;
+           }
+       }
    }
-   for( int i = 0; i < a; i++) {
-      leds[i] = CRGB::Red;
-   }
-   for( int i = a; i < NUM_LEDS; i++) {
-      leds[i] = CRGB::Black;
+   else {
+       for( int i = a; i < NUM_LEDS; i++) {
+          leds[i] = CRGB::Black;
+       }
+       for( int i = 0; i < a; i++) {
+          leds[i] = CRGB::Blue;
+       }
    }
    FastLED.show();
-   delay(100);
+   delay(10);
    
    }
